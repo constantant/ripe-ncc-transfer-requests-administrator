@@ -1,0 +1,28 @@
+<ng-container [formGroup]="form">
+  <div class="app-field">
+    <label i18n>Internet number sources</label>
+    <select formControlName="ipBlock">
+      <option *ngFor="let block of ipRanges$ | async" [value]="block">{{block}}</option>
+    </select>
+  </div>
+  <div class="app-field">
+    <label i18n>Transfer form</label>
+    <input formControlName="fromCompany" type="text"/>
+  </div>
+  <div class="app-field">
+    <label i18n>Transfer to</label>
+    <input formControlName="toCompany" type="text"/>
+  </div>
+  <div class="app-field">
+    <label i18n>Date</label>
+    <input formControlName="date" type="datetime-local"/>
+  </div>
+  <div class="app-field">
+    <label i18n>Transfer type</label>
+    <select formControlName="transferType">
+      <option *ngFor="let transferType of transferTypes$ | async" [value]="transferType">
+        <app-transfer-types [type]="transferType"></app-transfer-types>
+      </option>
+    </select>
+  </div>
+</ng-container>

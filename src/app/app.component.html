@@ -1,20 +1,100 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="app">
+  <div class="app-header">
+    <button (click)="showAddForm()">Add a transfer</button>
+  </div>
+  <div class="app-content">
+    <table class="app-grid">
+      <thead>
+      <tr>
+        <th
+          [ngClass]="orderByClass(fields.IpBlock)"
+          (click)="orderBy(fields.IpBlock)"
+          i18n>Internet number sources
+        </th>
+        <th
+          [ngClass]="orderByClass(fields.FromCompany)"
+          (click)="orderBy(fields.FromCompany)"
+          i18n>Transfer form
+        </th>
+        <th
+          [ngClass]="orderByClass(fields.ToCompany)"
+          (click)="orderBy(fields.ToCompany)"
+          i18n>Transfer to
+        </th>
+        <th
+          [ngClass]="orderByClass(fields.Date)"
+          (click)="orderBy(fields.Date)"
+          i18n>Date
+        </th>
+        <th
+          [ngClass]="orderByClass(fields.TransferType)"
+          (click)="orderBy(fields.TransferType)"
+          i18n>Transfer type
+        </th>
+        <th></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let transfer of transfers$ | async">
+        <td>{{transfer.ipBlock}}</td>
+        <td>{{transfer.fromCompany}}</td>
+        <td>{{transfer.toCompany}}</td>
+        <td>{{transfer.date | date: 'dd/MM/yyyy'}}</td>
+        <td>
+          <app-transfer-types [type]="transfer.transferType"></app-transfer-types>
+        </td>
+        <td>
+          <button (click)="showUpdateForm(transfer)">Edit</button>
+        </td>
+        <td>
+          <button (click)="showDeleteForm(transfer)">Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
 
+<div class="app-modal" *ngIf="(modalState$$ | async) !== modalTypes.None">
+  <div class="app-modal-layer" (click)="closeModal()"></div>
+  <div class="app-modal-content">
+    <ng-container [ngSwitch]="modalState$$ | async">
+      <ng-container *ngSwitchCase="modalTypes.Add">
+        <h2 i18n>Register the resource</h2>
+        <app-transfer-form #add></app-transfer-form>
+        <button
+          [disabled]="add.form.invalid"
+          (click)="addTransfer(add.form.value)"
+          i18n>Add
+        </button>
+        <a class="app-form-cancel" href="javascript:" (click)="closeModal()" i18n>Cancel</a>
+      </ng-container>
+      <ng-container *ngSwitchCase="modalTypes.Edit">
+        <ng-container *ngIf="modalData$$ | async as data">
+          <h2 i18n>Edit the resource</h2>
+          <p>{{data.ipBlock}}</p>
+          <app-transfer-form [data]="data" #edit></app-transfer-form>
+          <button
+            [disabled]="edit.form.invalid"
+            (click)="updateTransfer(data.id, edit.form.value)"
+            i18n>Edit
+          </button>
+          <a class="app-form-cancel" href="javascript:" (click)="closeModal()" i18n>Cancel</a>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="modalTypes.Delete">
+        <ng-container *ngIf="modalData$$ | async as data">
+          <h2 i18n>Resource Deleting</h2>
+          <p>Are you going to delete the resource?</p>
+          <pre>{{data | json}}</pre>
+          <button
+            (click)="deleteTransfer(data.id)"
+            i18n>Delete
+          </button>
+          <a class="app-form-cancel" href="javascript:" (click)="closeModal()" i18n>Cancel</a>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
