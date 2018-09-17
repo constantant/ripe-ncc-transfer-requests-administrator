@@ -8,7 +8,7 @@ export class TransfersApiService {
 
   transferTypes$ = this.httpClient.get<string[]>(`/api/transfertypes`).pipe(shareReplay());
 
-  ipRanges$  = this.httpClient.get<string[]>(`/api/ipranges`).pipe(shareReplay());
+  ipRanges$ = this.httpClient.get<string[]>(`/api/ipranges`).pipe(shareReplay());
 
   constructor(private httpClient: HttpClient) {
   }

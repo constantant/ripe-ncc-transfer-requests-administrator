@@ -3,14 +3,14 @@ import { TransfersApiService } from './shared/transfers-api.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-enum EModalTypes {
+export enum EModalTypes {
   None,
   Add,
   Edit,
   Delete
 }
 
-enum EFields {
+export enum EFields {
   IpBlock = 'ipBlock',
   FromCompany = 'fromCompany',
   ToCompany = 'toCompany',
@@ -18,7 +18,7 @@ enum EFields {
   TransferType = 'transferType'
 }
 
-enum EOrderDirection {
+export enum EOrderDirection {
   Ascending,
   Descending
 }
@@ -38,22 +38,22 @@ export class AppComponent {
     switchMap(() => this.apiService.getTransfers()),
     switchMap((transfers: ITransfer[]) => this.orderBy$$.pipe(
       map((field: EFields) => {
-        if (field) {
-          const sorting = (f: EFields) => (a, b) => {
-            const isASC = this.orderDirection === EOrderDirection.Ascending;
-            const x = a[f].toLowerCase();
-            const y = b[f].toLowerCase();
-            if (x < y) {
-              return isASC ? -1 : 1;
-            }
-            if (x > y) {
-              return isASC ? 1 : -1;
-            }
-            return 0;
-          };
-          transfers.sort(sorting(field));
+        if (!field) {
+          return transfers;
         }
-        return transfers;
+        const sorting = (f: EFields) => (a, b) => {
+          const isASC = this.orderDirection === EOrderDirection.Ascending;
+          const x = a[f].toLowerCase();
+          const y = b[f].toLowerCase();
+          if (x < y) {
+            return isASC ? -1 : 1;
+          }
+          if (x > y) {
+            return isASC ? 1 : -1;
+          }
+          return 0;
+        };
+        return transfers.slice().sort(sorting(field));
       })
     ))
   );
