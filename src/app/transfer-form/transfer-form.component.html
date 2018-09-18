@@ -1,25 +1,25 @@
 <ng-container [formGroup]="form">
   <div class="app-field">
-    <label i18n>Internet number sources</label>
-    <select formControlName="ipBlock">
+    <label for="form-ip-block" i18n>Internet number sources</label>
+    <select formControlName="ipBlock" id="form-ip-block">
       <option *ngFor="let block of ipRanges$ | async" [value]="block">{{block}}</option>
     </select>
   </div>
   <div class="app-field">
-    <label i18n>Transfer form</label>
-    <input formControlName="fromCompany" type="text"/>
+    <label for="form-from-company" i18n>Transfer form</label>
+    <input formControlName="fromCompany" id="form-from-company" type="text"/>
   </div>
   <div class="app-field">
-    <label i18n>Transfer to</label>
-    <input formControlName="toCompany" type="text"/>
+    <label for="form-to-company" i18n>Transfer to</label>
+    <input formControlName="toCompany" id="form-to-company" type="text"/>
   </div>
   <div class="app-field">
-    <label i18n>Date</label>
-    <input formControlName="date" type="datetime-local"/>
+    <label for="form-date" i18n>Date</label>
+    <input formControlName="date" id="form-date" type="datetime-local"/>
   </div>
   <div class="app-field">
-    <label i18n>Transfer type</label>
-    <select formControlName="transferType">
+    <label for="form-transfer-type" i18n>Transfer type</label>
+    <select formControlName="transferType" id="form-transfer-type">
       <option *ngFor="let transferType of transferTypes$ | async" [value]="transferType">
         <app-transfer-types [type]="transferType"></app-transfer-types>
       </option>
